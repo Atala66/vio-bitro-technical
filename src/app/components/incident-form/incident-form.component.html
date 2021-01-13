@@ -1,0 +1,71 @@
+
+
+<div class="incident-form-container">
+<form [formGroup]="incidentForm" class="incidentForm">
+
+<!--  INIT: APERTURA INCIDENCIA  -->
+<mat-form-field color="accent" appearance="fill">
+  <mat-label>Inherited calendar color</mat-label>
+  <input matInput [matDatepicker]="picker1" formControlName="datePickerTask">
+  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+  <mat-datepicker #picker1></mat-datepicker>
+</mat-form-field>
+<!--  END: CIERRE INCIDENCIA  -->
+
+
+<!--  INIT: APERTURA SEVERIDAD  -->
+<h4>Basic mat-select</h4>
+<mat-form-field appearance="fill">
+  <mat-label>Severidad</mat-label>
+  <mat-select formControlName="severitySelect">
+    <mat-option *ngFor="let severity of severityRange" [value]="severity.value">
+      {{ severity.viewValue }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+<!--  END: CIERRE SEVERIDAD  -->
+
+<!--  INIT: APERTURA TIPO INCIDENCIA   depende del anterior-->
+ <h4>Basic mat-select</h4>
+<mat-form-field appearance="fill">
+  <mat-label>Tipo de incidencia</mat-label>
+  <mat-select formControlName="severityTypeSelect">
+    <mat-option *ngFor="let severity of severityType" [value]="severity.value">
+      {{ severity.viewValue }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+<!--  END: CIERRE TIPO INCIDENCIA  -->
+
+<!-- INIT: NOTIFICAR -->
+<mat-form-field class="example-form-field">
+  <mat-label>Notificar</mat-label>
+  <input matInput type="text" formControlName="notification">
+</mat-form-field>
+<!-- END:: NOTIFICAR -->
+
+
+<hr/>
+
+
+<!--  INIT: APERTURA DATOS APERTURA  -->
+
+<!--  END: CIERRE DATOS APERTURA  -->
+
+<!--  INIT: PERSONA -->
+
+<!--  END: CIERRE PERSONA -->
+
+<!--  INIT: Froala  -->
+
+<!--  END: CIERRE Froala  -->
+
+<hr/>
+
+
+</form>
+
+
+
+
+</div>
