@@ -1,100 +1,151 @@
-
-
 <div class="incident-form-container">
-<form [formGroup]="incidentForm" class="incidentForm">
-<h3 class="title">Datos de la incidencia</h3>
-<div class="block-one">
-<!--  INIT: APERTURA INCIDENCIA  -->
-<mat-form-field class="form-field picker1" floatLabel="never">
-    <label>Fecha / Hora de la incidencia</label>
-  <input matInput [matDatepicker]="picker1" formControlName="datePickerTask">
-  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-  <mat-datepicker #picker1></mat-datepicker>
-</mat-form-field>
-<!--  END: CIERRE INCIDENCIA  -->
+  <form [formGroup]="incidentForm" class="incidentForm">
+    <h3 class="title">Datos de la incidencia</h3>
+    <div class="block-one">
+      <!--  INIT: APERTURA INCIDENCIA  -->
+      <mat-form-field class="form-field picker1" floatLabel="never">
+        <label class="label">{{ FORM_LABELS.DATE_PICKER_TASK | uppercase  }}</label>
+        <input
+          matInput
+          [matDatepicker]="picker1"
+          formControlName="datePickerTask"
+          required
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="picker1"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+        <div
+          class="error-container"
+          *ngIf="incidentForm.controls.datePickerTask.touched && incidentForm.controls.datePickerTask.errors?.required"
+        >
+          <span class="has-error">Campo Requerido</span>
+        </div>
+      </mat-form-field>
 
+      <!--  END: CIERRE INCIDENCIA  -->
+      <!--  INIT: APERTURA SEVERIDAD  -->
+      <mat-form-field class="form-field" floatLabel="never">
+        <label class="label">{{ FORM_LABELS.SEVERITY_SELECT | uppercase   }}</label>
+        <mat-select formControlName="severitySelect">
+          <mat-option
+            *ngFor="let severity of severityRange"
+            [value]="severity.value"
+          >
+            {{ severity.viewValue }}
+          </mat-option>
+        </mat-select>
+        <div
+          class="error-container"
+          *ngIf="incidentForm.controls.severitySelect.touched && incidentForm.controls.severitySelect.errors?.required"
+        >
+          <span class="has-error">Campo Requerido</span>
+        </div>
+      </mat-form-field>
+      <!--  END: CIERRE SEVERIDAD  -->
 
-<!--  INIT: APERTURA SEVERIDAD  -->
-<mat-form-field class="form-field"  floatLabel="never">
-  <label>Severidad</label>
-  <mat-select formControlName="severitySelect">
-    <mat-option *ngFor="let severity of severityRange" [value]="severity.value">
-      {{ severity.viewValue }}
-    </mat-option>
-  </mat-select>
-</mat-form-field>
-<!--  END: CIERRE SEVERIDAD  -->
+      <!--  INIT: APERTURA TIPO INCIDENCIA -->
+      <mat-form-field class="form-field" floatLabel="never">
+        <label class="label">{{ FORM_LABELS.SEVERITY_TYPE_SELECT | uppercase  }}</label>
+        <mat-select formControlName="severityTypeSelect">
+          <div *ngIf="isMinorSeverity">
+            <mat-option
+              *ngFor="let severity of severityTypeOptions"
+              [value]="severity.value"
+            >
+              {{ severity.viewValue }}
+            </mat-option>
+          </div>
+        </mat-select>
+        <div class="error-container" *ngIf="incidentForm.controls.severityTypeSelect.touched && incidentForm.controls.severityTypeSelect.errors?.required"
+        >
+          <span class="has-error">Campo Requerido</span>
+        </div>
+      </mat-form-field>
+      <!--  END: CIERRE TIPO INCIDENCIA  -->
 
-<!--  INIT: APERTURA TIPO INCIDENCIA   depende del anterior -->
-<mat-form-field class="form-field"  floatLabel="never">
-  <label>Tipo de incidencia</label>
-  <mat-select formControlName="severityTypeSelect">
-    <mat-option *ngFor="let severity of severityType" [value]="severity.value">
-      {{ severity.viewValue }}
-    </mat-option>
-  </mat-select>
-</mat-form-field>
-<!--  END: CIERRE TIPO INCIDENCIA  -->
+      <!-- INIT: NOTIFICAR -->
+      <mat-form-field class="form-field" floatLabel="never">
+        <label class="label">{{ FORM_LABELS.NOTIFICATION | uppercase  }}</label>
+        <input matInput type="text" formControlName="notification" />
+      </mat-form-field>
+      <!-- END:: NOTIFICAR -->
+    </div>
+    <hr />
 
-<!-- INIT: NOTIFICAR -->
-<mat-form-field class="form-field" floatLabel="never">
-  <label>Notificar</label>
-  <input matInput type="text" formControlName="notification">
-</mat-form-field>
-<!-- END:: NOTIFICAR -->
-</div>
-<hr/>
+    <h3 class="title">Datos de la apertura</h3>
+    <div class="block-two">
+      <!--  INIT: APERTURA DATOS APERTURA  -->
+      <mat-form-field class="form-field picker2" floatLabel="never">
+        <label class="label">{{ FORM_LABELS.DATE_PICKER_OPENING | uppercase    }}</label>
+        <input
+          matInput
+          [matDatepicker]="picker2"
+          formControlName="datePickerOpening"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="picker2"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #picker2></mat-datepicker>
+	     <div class="error-container" *ngIf="incidentForm.controls.datePickerOpening.touched && incidentForm.controls.datePickerOpening.errors?.required">
+          <span class="has-error">Campo Requerido</span>
+        </div>
+      </mat-form-field>
+      <!--  END: CIERRE DATOS APERTURA  -->
 
+      <!--  INIT: PERSONA -->
+      <mat-form-field class="form-field" floatLabel="never">
+        <label class="label">{{ FORM_LABELS.RESPONSIBLE_PERSON | uppercase }}</label>
+        <input
+          type="text"
+          placeholder=""
+          aria-label="Number"
+          matInput
+          formControlName="responsiblePerson"
+          [matAutocomplete]="auto"
+        />
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+          <mat-option
+            *ngFor="let option of filteredOptions | async"
+            [value]="option"
+          >
+            {{ option }}
+          </mat-option>
+        </mat-autocomplete> </mat-form-field
+      ><!--  END: CIERRE PERSONA -->
+    </div>
 
-<h3 class="title">Datos de la apertura</h3>
-<div class="block-two">
-<!--  INIT: APERTURA DATOS APERTURA  -->
-<mat-form-field class="form-field picker2" floatLabel="never">
-    <label>Fecha / Hora</label>
-  <input matInput [matDatepicker]="picker2" formControlName="datePickerOpening">
-  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-  <mat-datepicker #picker2></mat-datepicker>
-</mat-form-field>
-<!--  END: CIERRE DATOS APERTURA  -->
+    <div class="block-three">
+	<label class="label">{{ FORM_LABELS.NOTES | uppercase      }}</label>
+      <!--  INIT: Editor  -->
+      <editor
+        formControlName="textArea"
+        [init]="{
+          icons: 'material',
+          skin: 'borderless',
+          plugins: 'wordcount',
+          menubar: false,
+          min_height: 150
+        }"
+      ></editor>
+      <!--  END: editor  -->
+    </div>
 
-<!--  INIT: PERSONA -->
-  <mat-form-field class="form-field" floatLabel="never">
-      <label>Persona</label>
-    <input type="text"
-           placeholder=""
-           aria-label="Number"
-           matInput
-           formControlName="responsiblePerson"
-           [matAutocomplete]="auto">
-    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-      <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-        {{ option  }}
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field><!--  END: CIERRE PERSONA -->
-  </div>
-
-<div class="block-three">
-<!--  INIT: Editor  -->
-<editor
-  formControlName="textArea"
-  [init]="{
-    icons: 'material',
-    skin: 'borderless',
-    plugins: 'wordcount',
-    menubar: false,
-    min_height: 150
-  }"
-></editor>
- <!--  END: editor  -->
-</div>
-
-<div class="btn-container">
-  
-   <app-button *ngIf="btnDeleteIncident"  [config]="btnDeleteIncident" class="btn-action delete"></app-button>
-   <app-button *ngIf="btnRegisterIncident"  [config]="btnRegisterIncident" class="btn-action register"></app-button>
-</div>
-
-</form>
-
+    <div class="btn-container">
+      <app-button
+        *ngIf="btnDeleteIncident"
+        [config]="btnDeleteIncident"
+        class="btn-action delete"
+        (click)="cancelForm()"
+      ></app-button>
+      <app-button
+        *ngIf="btnRegisterIncident"
+        [config]="btnRegisterIncident"
+        class="btn-action register"
+        (click)="sendForm()"
+      ></app-button>
+    </div>
+  </form>
 </div>

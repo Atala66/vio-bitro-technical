@@ -2,22 +2,29 @@
   .incidentForm {
     .title {
       font-size: 16px;
-      color: blue;
+      color: #89b0f0;
       font-weight: bold;
       margin-left: 1.25rem;
     }
   }
+  .label{
+	  font-size: 12px;
+  }
   .block-one,
   .block-two {
     display: flex;
-    justify-content: space-around;
+	justify-content: space-around;
+	align-items: flex-end;
+	padding-bottom: 2rem;
     .picker1 {
       width: 25%;
     }
   }
 
   .block-two {
-    align-items: center;
+    .picker2 {
+		width: 25%;
+	}
   }
 
   .btn-container {
@@ -31,4 +38,18 @@
       }
     }
   }
+
+  // error- classes
+  .error-container{
+	  position: absolute;
+	  .has-error {
+		color: #fa0e0a;
+		font-weight: bold;
+		display: block;
+		font-size: 0.8rem;
+		position: relative;
+		top: 13px;
+	  }
+  }
+
 }

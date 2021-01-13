@@ -14,8 +14,7 @@ export class HomeViewComponent implements OnInit {
   constructor(private _materialModule: MaterialModule) {}
 
   ngOnInit(): void {
-	this.buttonConfig = this.configButton();
-	console.log('btn::', this.buttonConfig);
+    this.buttonConfig = this.configButton();
   }
 
   public openModalForm() {
@@ -32,6 +31,7 @@ export class HomeViewComponent implements OnInit {
   public configButton(): IButtonModel {
     return {
       text: 'Crea una incidencia',
+      style: 'green-btn',
     };
   }
 }
