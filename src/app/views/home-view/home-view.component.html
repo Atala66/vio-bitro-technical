@@ -4,7 +4,8 @@
 <main class="home-view-container">
 
 
- <button mat-raised-button color="primary" (click)="openModalForm()">Crea una incidencia</button>
+ <!--<button mat-raised-button color="primary" (click)="openModalForm()">Crea una incidencia</button>-->
+ <app-button *ngIf="buttonConfig" [config]="buttonConfig" (click)="openModalForm()"></app-button>
 
 
 

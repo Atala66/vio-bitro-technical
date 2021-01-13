@@ -8,6 +8,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { EditorModule } from '@tinymce/tinymce-angular';
+import { ButtonModule } from '../button/button.module';
 
 @NgModule({
   declarations: [IncidentFormComponent],
@@ -19,8 +22,11 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
     MatInputModule,
     MatSelectModule,
     MatDatepickerModule,
-     MatNativeDateModule,
-     MatMomentDateModule
+    MatNativeDateModule,
+    MatMomentDateModule,
+    MatAutocompleteModule,
+    EditorModule,
+    ButtonModule,
   ],
   exports: [IncidentFormComponent],
 })

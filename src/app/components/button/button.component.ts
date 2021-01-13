@@ -1,21 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core';
+import { IButtonModel } from './button.model';
 
 @Component({
   selector: 'app-button',
   templateUrl: './button.component.html',
-  styleUrls: ['./button.component.less']
+  styleUrls: ['./button.component.less'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ButtonComponent implements OnInit {
+  @Input() config: IButtonModel;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {  }
-
-
-
+  ngOnInit(): void {}
 
   public openModalForm() {
-	  console.log('abre el modal formulario');
+    console.log('abre el modal formulario');
   }
-
 }
