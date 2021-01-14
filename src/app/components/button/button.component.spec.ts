@@ -23,7 +23,4 @@ describe('ButtonComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should open modal', () => {
-
-  });
 });

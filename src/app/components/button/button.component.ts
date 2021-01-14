@@ -14,7 +14,4 @@ export class ButtonComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  public openModalForm() {
-    console.log('abre el modal formulario');
-  }
 }

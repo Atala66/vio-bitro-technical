@@ -10,6 +10,8 @@ import { Observable } from 'rxjs';
 import { ReusableModalComponent } from '../reusable-modal/reusable-modal.component';
 import { map, startWith } from 'rxjs/operators';
 import { IButtonModel } from '../button/button.model';
+import { IncidentFormService } from './incident-form.service';
+import { FORM_LABELS } from '../../constants';
 
 @Component({
   selector: 'app-incident-form',
@@ -24,9 +26,21 @@ export class IncidentFormComponent implements OnInit {
   public isMinorSeverity: boolean;
   public isMayorSeverity: boolean;
   public severityTypeOptions: { value: number; viewValue: string }[] = [];
+  public FORM_LABELS = {
+    DATE_PICKER_TASK: 'Fecha / Hora de la incidencia',
+    SEVERITY_SELECT: 'Severidad',
+    SEVERITY_TYPE_SELECT: 'Tipo de incidencia',
+    NOTIFICATION: 'Notificar',
+    DATE_PICKER_OPENING: 'Fecha / Hora de apertura',
+    RESPONSIBLE_PERSON: 'Persona',
+    NOTES: 'Notas',
+    REQUIRED_FIELD: 'Campo requerido',
+  };
 
-  options: string[] = ['One', 'Two', 'Three'];
+//   public FORM_LABELS = new FORM_LABELS();
+  options: string[] = [];
   filteredOptions: Observable<string[]>;
+  filteredOptionsForReal: Observable<string[]>;
 
   public severityRange = [
     { value: 1, viewValue: 'Menor' },
@@ -49,27 +63,19 @@ export class IncidentFormComponent implements OnInit {
     { value: 8, viewValue: 'Tipo 8' },
     { value: 9, viewValue: 'Tipo 9' },
   ];
-  public FORM_LABELS = {
-    DATE_PICKER_TASK: 'Fecha / Hora de la incidencia',
-    SEVERITY_SELECT: 'Severidad',
-    SEVERITY_TYPE_SELECT: 'Tipo de incidencia',
-    NOTIFICATION: 'Notificar',
-    DATE_PICKER_OPENING: 'Fecha / Hora de apertura',
-    RESPONSIBLE_PERSON: 'PERSONA',
-    NOTES: 'NOTAS',
-  };
 
   constructor(
     private fb: FormBuilder,
+    private _formSrv: IncidentFormService,
     private dialogRef: MatDialogRef<ReusableModalComponent>
   ) {}
 
   ngOnInit(): void {
     this.configForm();
-    this.btnDeleteIncident = this.configButton('Eliminar incidencia', 'red-btn');
-    this.btnRegisterIncident = this.configButton('Registrar incidencia', 'blue-btn');
+    this.configActionButtons();
     this.filterAutocomplete();
     this.linkDependantSelects();
+    this.getDataForAutocomplete();
   }
 
   get formControls() {
@@ -88,7 +94,23 @@ export class IncidentFormComponent implements OnInit {
     });
   }
 
+  public getDataForAutocomplete(): void {
+    this._formSrv.getPersonsToAutocomplete().subscribe(
+      (response) => {
+        if (response && response.data) {
+          this.options = response.data.persons;
+          console.log(this.options);
+        }
+      },
+      (error) => {
+        console.log('mocking a server ERROR::', error);
+        return error;
+      }
+    );
+  }
+
   public filterAutocomplete() {
+    this.getDataForAutocomplete();
     this.filteredOptions = this.incidentForm
       .get('responsiblePerson')
       .valueChanges.pipe(
@@ -106,24 +128,31 @@ export class IncidentFormComponent implements OnInit {
 
   public linkDependantSelects() {
     const severityRange = this.incidentForm.get('severitySelect');
-    // const severityType = this.incidentForm.get('severityTypeSelect');
-    // console.log('severityType::', severityType);
     severityRange.valueChanges.subscribe((sev) => {
       if (severityRange.value === 1) {
         this.isMinorSeverity = true;
-        // console.log('menor:: valores 1,2.3');
         this.severityTypeOptions = this.severityTypeMinor;
       }
       if (severityRange.value === 2) {
         this.isMayorSeverity = true;
-        // console.log('mayor:: valores 4,5,6');
         this.severityTypeOptions = this.severityTypeMayor;
       }
       if (severityRange.value === 3) {
-        // console.log('grave:: valores 7,8,9');
         this.severityTypeOptions = this.severityTypeCritical;
+        this.incidentForm.get('notification').setValidators(Validators.required);
       }
     });
+  }
+
+  public configActionButtons() {
+    this.btnDeleteIncident = this.configButton(
+      'Eliminar incidencia',
+      'red-btn'
+    );
+    this.btnRegisterIncident = this.configButton(
+      'Registrar incidencia',
+      'blue-btn'
+    );
   }
 
   public configButton(text: string, style: string): IButtonModel {
@@ -135,6 +164,7 @@ export class IncidentFormComponent implements OnInit {
 
   public sendForm() {
     this.incidentForm.value();
+    this.dialogRef.close();
   }
 
   cancelForm() {

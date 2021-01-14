@@ -20,10 +20,9 @@
           class="error-container"
           *ngIf="incidentForm.controls.datePickerTask.touched && incidentForm.controls.datePickerTask.errors?.required"
         >
-          <span class="has-error">Campo Requerido</span>
+          <span class="has-error">{{ FORM_LABELS.REQUIRED_FIELD  }}</span>
         </div>
       </mat-form-field>
-
       <!--  END: CIERRE INCIDENCIA  -->
       <!--  INIT: APERTURA SEVERIDAD  -->
       <mat-form-field class="form-field" floatLabel="never">
@@ -40,7 +39,7 @@
           class="error-container"
           *ngIf="incidentForm.controls.severitySelect.touched && incidentForm.controls.severitySelect.errors?.required"
         >
-          <span class="has-error">Campo Requerido</span>
+          <span class="has-error">{{   FORM_LABELS.REQUIRED_FIELD   }}</span>
         </div>
       </mat-form-field>
       <!--  END: CIERRE SEVERIDAD  -->
@@ -60,7 +59,7 @@
         </mat-select>
         <div class="error-container" *ngIf="incidentForm.controls.severityTypeSelect.touched && incidentForm.controls.severityTypeSelect.errors?.required"
         >
-          <span class="has-error">Campo Requerido</span>
+          <span class="has-error">{{   FORM_LABELS.REQUIRED_FIELD   }}</span>
         </div>
       </mat-form-field>
       <!--  END: CIERRE TIPO INCIDENCIA  -->
@@ -70,6 +69,10 @@
         <label class="label">{{ FORM_LABELS.NOTIFICATION | uppercase  }}</label>
         <input matInput type="text" formControlName="notification" />
       </mat-form-field>
+	        <div class="error-container" *ngIf="incidentForm.controls.notification.errors?.required"
+        >
+          <span class="has-error">{{   FORM_LABELS.REQUIRED_FIELD   }}</span>
+        </div>
       <!-- END:: NOTIFICAR -->
     </div>
     <hr />
@@ -90,7 +93,7 @@
         ></mat-datepicker-toggle>
         <mat-datepicker #picker2></mat-datepicker>
 	     <div class="error-container" *ngIf="incidentForm.controls.datePickerOpening.touched && incidentForm.controls.datePickerOpening.errors?.required">
-          <span class="has-error">Campo Requerido</span>
+          <span class="has-error">{{   FORM_LABELS.REQUIRED_FIELD   }}</span>
         </div>
       </mat-form-field>
       <!--  END: CIERRE DATOS APERTURA  -->
@@ -118,7 +121,7 @@
     </div>
 
     <div class="block-three">
-	<label class="label">{{ FORM_LABELS.NOTES | uppercase      }}</label>
+	<label class="label">{{ FORM_LABELS.NOTES | uppercase }}</label>
       <!--  INIT: Editor  -->
       <editor
         formControlName="textArea"

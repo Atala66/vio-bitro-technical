@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MaterialModule } from 'src/app/material.module';
 
 import { HomeViewComponent } from './home-view.component';
 
@@ -8,7 +9,8 @@ describe('HomeViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HomeViewComponent ]
+	  declarations: [ HomeViewComponent ],
+	  imports: [MaterialModule]
     })
     .compileComponents();
   });

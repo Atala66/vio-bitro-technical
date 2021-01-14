@@ -11,6 +11,7 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { ButtonModule } from '../button/button.module';
+import { IncidentFormService } from './incident-form.service';
 
 @NgModule({
   declarations: [IncidentFormComponent],
@@ -27,6 +28,9 @@ import { ButtonModule } from '../button/button.module';
     MatAutocompleteModule,
     EditorModule,
     ButtonModule,
+  ],
+  providers: [
+	IncidentFormService
   ],
   exports: [IncidentFormComponent],
 })
