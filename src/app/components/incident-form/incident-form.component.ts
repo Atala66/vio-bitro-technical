@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ɵConsole } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -6,12 +6,13 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { ReusableModalComponent } from '../reusable-modal/reusable-modal.component';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, take } from 'rxjs/operators';
 import { IButtonModel } from '../button/button.model';
 import { IncidentFormService } from './incident-form.service';
+import { SuccessNotificationComponent } from '../success-notification/success-notification.component';
 
 @Component({
   selector: 'app-incident-form',
@@ -25,6 +26,7 @@ export class IncidentFormComponent implements OnInit {
   public btnRegisterIncident: any;
   public isMinorSeverity: boolean;
   public isCritical: boolean;
+  public isNotificationClosed: boolean;
   public severityTypeOptions: { value: number; viewValue: string }[] = [];
 
   public FORM_LABELS = {
@@ -67,7 +69,8 @@ export class IncidentFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private _formSrv: IncidentFormService,
-    private dialogRef: MatDialogRef<ReusableModalComponent>
+    private dialogRef: MatDialogRef<ReusableModalComponent>,
+    private _dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -162,6 +165,7 @@ export class IncidentFormComponent implements OnInit {
     if (this.incidentForm.valid) {
       const isValidNotification = this.validateNotification();
       if (isValidNotification) {
+        this.notificateSuccess();
         this.sendFormAndCloseModal();
       }
     } else {
@@ -189,8 +193,22 @@ export class IncidentFormComponent implements OnInit {
   }
 
   public sendFormAndCloseModal() {
-    const formValues = this.incidentForm.value;
-    this.dialogRef.close({ formValues: formValues });
+      const formValues = this.incidentForm.value;
+      this.dialogRef.close({ formValues: formValues });
+  }
+
+  public notificateSuccess() {
+    const timeout = 2000;
+    const dialogRef = this._dialog.open(SuccessNotificationComponent, {
+      width: '400px',
+      data: {},
+    });
+    dialogRef.afterOpened().subscribe((_) => {
+      setTimeout(() => {
+        dialogRef.close();
+      }, timeout);
+    });
+
   }
 
   cancelForm() {

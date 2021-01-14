@@ -12,6 +12,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { ButtonModule } from '../button/button.module';
 import { IncidentFormService } from './incident-form.service';
+import { SuccessNotificationModule } from '../success-notification/success-notification.module';
 
 @NgModule({
   declarations: [IncidentFormComponent],
@@ -27,7 +28,8 @@ import { IncidentFormService } from './incident-form.service';
     MatMomentDateModule,
     MatAutocompleteModule,
     EditorModule,
-    ButtonModule,
+	ButtonModule,
+	SuccessNotificationModule
   ],
   providers: [
 	IncidentFormService

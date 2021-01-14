@@ -6,10 +6,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import {
-  MatDialog,
-  MatDialogModule,
-} from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ReusableModalComponent } from './components/reusable-modal/reusable-modal.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -46,7 +43,7 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
     MatDatepickerModule,
     MatNativeDateModule,
     MatMomentDateModule,
-  ]
+  ],
 })
 export class MaterialModule {
   constructor(public dialog: MatDialog) {}
@@ -80,9 +77,10 @@ export class MaterialModule {
     data.class = data.class.split(' ');
     data.component = content;
     const dialogRef = this.dialog.open(ReusableModalComponent, {
-      // tslint:disable-next-line:object-literal-shorthand
+	  // tslint:disable-next-line:object-literal-shorthand
       data: data,
       panelClass: data.class ? data.class : '',
     });
+
   }
 }
