@@ -48,18 +48,16 @@
       <mat-form-field class="form-field" floatLabel="never">
         <label class="label">{{ FORM_LABELS.SEVERITY_TYPE_SELECT | uppercase  }}</label>
         <mat-select formControlName="severityTypeSelect">
-          <div *ngIf="isMinorSeverity">
+          <div>
             <mat-option
               *ngFor="let severity of severityTypeOptions"
-              [value]="severity.value"
-            >
+              [value]="severity.value">
               {{ severity.viewValue }}
             </mat-option>
           </div>
         </mat-select>
-        <div class="error-container" *ngIf="incidentForm.controls.severityTypeSelect.touched && incidentForm.controls.severityTypeSelect.errors?.required"
-        >
-          <span class="has-error">{{   FORM_LABELS.REQUIRED_FIELD   }}</span>
+        <div class="error-container" *ngIf="incidentForm.controls.severityTypeSelect.touched && incidentForm.controls.severityTypeSelect.errors?.required">
+          <span class="has-error">{{  FORM_LABELS.REQUIRED_FIELD   }}</span>
         </div>
       </mat-form-field>
       <!--  END: CIERRE TIPO INCIDENCIA  -->
@@ -68,11 +66,10 @@
       <mat-form-field class="form-field" floatLabel="never">
         <label class="label">{{ FORM_LABELS.NOTIFICATION | uppercase  }}</label>
         <input matInput type="text" formControlName="notification" />
-      </mat-form-field>
-	        <div class="error-container" *ngIf="incidentForm.controls.notification.errors?.required"
-        >
+		<div class="error-container" *ngIf="isCritical && !incidentForm.controls.notification.value">
           <span class="has-error">{{   FORM_LABELS.REQUIRED_FIELD   }}</span>
         </div>
+      </mat-form-field>
       <!-- END:: NOTIFICAR -->
     </div>
     <hr />

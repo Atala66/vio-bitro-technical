@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -11,7 +12,6 @@ import { ReusableModalComponent } from '../reusable-modal/reusable-modal.compone
 import { map, startWith } from 'rxjs/operators';
 import { IButtonModel } from '../button/button.model';
 import { IncidentFormService } from './incident-form.service';
-import { FORM_LABELS } from '../../constants';
 
 @Component({
   selector: 'app-incident-form',
@@ -24,8 +24,9 @@ export class IncidentFormComponent implements OnInit {
   public btnDeleteIncident: any;
   public btnRegisterIncident: any;
   public isMinorSeverity: boolean;
-  public isMayorSeverity: boolean;
+  public isCritical: boolean;
   public severityTypeOptions: { value: number; viewValue: string }[] = [];
+
   public FORM_LABELS = {
     DATE_PICKER_TASK: 'Fecha / Hora de la incidencia',
     SEVERITY_SELECT: 'Severidad',
@@ -37,7 +38,6 @@ export class IncidentFormComponent implements OnInit {
     REQUIRED_FIELD: 'Campo requerido',
   };
 
-//   public FORM_LABELS = new FORM_LABELS();
   options: string[] = [];
   filteredOptions: Observable<string[]>;
   filteredOptionsForReal: Observable<string[]>;
@@ -73,9 +73,8 @@ export class IncidentFormComponent implements OnInit {
   ngOnInit(): void {
     this.configForm();
     this.configActionButtons();
-    this.filterAutocomplete();
     this.linkDependantSelects();
-    this.getDataForAutocomplete();
+    this.filterAutocomplete();
   }
 
   get formControls() {
@@ -87,7 +86,7 @@ export class IncidentFormComponent implements OnInit {
       datePickerTask: new FormControl(null, [Validators.required]),
       severitySelect: new FormControl(null, [Validators.required]),
       severityTypeSelect: new FormControl(null, [Validators.required]),
-      notification: new FormControl(null, [Validators.minLength(3)]),
+      notification: new FormControl(null, [this.notificationValidator()]),
       datePickerOpening: new FormControl(null, [Validators.required]),
       responsiblePerson: new FormControl(null),
       textArea: new FormControl(null),
@@ -99,7 +98,6 @@ export class IncidentFormComponent implements OnInit {
       (response) => {
         if (response && response.data) {
           this.options = response.data.persons;
-          console.log(this.options);
         }
       },
       (error) => {
@@ -129,19 +127,74 @@ export class IncidentFormComponent implements OnInit {
   public linkDependantSelects() {
     const severityRange = this.incidentForm.get('severitySelect');
     severityRange.valueChanges.subscribe((sev) => {
+      severityRange.clearValidators();
       if (severityRange.value === 1) {
         this.isMinorSeverity = true;
         this.severityTypeOptions = this.severityTypeMinor;
+        this.isCritical = false;
       }
       if (severityRange.value === 2) {
-        this.isMayorSeverity = true;
         this.severityTypeOptions = this.severityTypeMayor;
+        this.isCritical = false;
       }
       if (severityRange.value === 3) {
         this.severityTypeOptions = this.severityTypeCritical;
-        this.incidentForm.get('notification').setValidators(Validators.required);
+        this.isCritical = true;
       }
     });
+  }
+
+  public notificationValidator() {
+    return (control: AbstractControl) => {
+      let severityRange = null;
+      if (this.incidentForm) {
+        severityRange = this.incidentForm.get('severitySelect');
+      }
+      if (severityRange && severityRange.value === 3 && !control.value) {
+        return { notification: true };
+      } else {
+        return null;
+      }
+    };
+  }
+
+  public sendForm() {
+    if (this.incidentForm.valid) {
+      const isValidNotification = this.validateNotification();
+      if (isValidNotification) {
+        this.sendFormAndCloseModal();
+      }
+    } else {
+      this.showFormErrors();
+    }
+  }
+
+  public showFormErrors() {
+    Object.keys(this.incidentForm.controls).forEach((field) => {
+      const control = this.incidentForm.get(field);
+      control.markAsTouched({ onlySelf: true });
+    });
+  }
+
+  public validateNotification() {
+    let isValidForm = null;
+    const severityRange = this.incidentForm.get('severitySelect');
+    const notification = this.incidentForm.get('notification');
+    if (severityRange && severityRange.value === 3 && !notification.value) {
+      isValidForm = false;
+    } else {
+      isValidForm = true;
+    }
+    return isValidForm;
+  }
+
+  public sendFormAndCloseModal() {
+    const formValues = this.incidentForm.value;
+    this.dialogRef.close({ formValues: formValues });
+  }
+
+  cancelForm() {
+    this.dialogRef.close();
   }
 
   public configActionButtons() {
@@ -160,14 +213,5 @@ export class IncidentFormComponent implements OnInit {
       text: text,
       style: style,
     };
-  }
-
-  public sendForm() {
-    this.incidentForm.value();
-    this.dialogRef.close();
-  }
-
-  cancelForm() {
-    this.dialogRef.close();
   }
 }
