@@ -19,7 +19,7 @@ export class ReusableModalComponent implements OnInit, AfterViewInit {
   public confirmButton: string;
   public cancelButton: string;
   public component: boolean;
-  public dataExample: any;
+  public dataExample: { };
   private componentRef;
   @ViewChild('component', { read: ViewContainerRef, static: false })
   container: ViewContainerRef;
@@ -47,12 +47,10 @@ export class ReusableModalComponent implements OnInit, AfterViewInit {
       }, 0);
     }
   }
-
-  public cancelButtonClick() {
+ /**
+  * @description close X icon
+  */
+  public cancelButtonClick(): void {
     this.dialogRef.close();
-  }
-
-  public confirmButtonClick() {
-    this.dialogRef.close({ data: this.dataExample })
   }
 }

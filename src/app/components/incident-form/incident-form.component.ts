@@ -4,12 +4,13 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { ReusableModalComponent } from '../reusable-modal/reusable-modal.component';
-import { map, startWith, take } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import { IButtonModel } from '../button/button.model';
 import { IncidentFormService } from './incident-form.service';
 import { SuccessNotificationComponent } from '../success-notification/success-notification.component';
@@ -18,12 +19,12 @@ import { SuccessNotificationComponent } from '../success-notification/success-no
   selector: 'app-incident-form',
   templateUrl: './incident-form.component.html',
   styleUrls: ['./incident-form.component.less'],
-  encapsulation: ViewEncapsulation.None,
+  encapsulation: ViewEncapsulation.None
 })
 export class IncidentFormComponent implements OnInit {
   public incidentForm: FormGroup;
-  public btnDeleteIncident: any;
-  public btnRegisterIncident: any;
+  public btnDeleteIncident: IButtonModel;
+  public btnRegisterIncident: IButtonModel;
   public isMinorSeverity: boolean;
   public isCritical: boolean;
   public isNotificationClosed: boolean;
@@ -69,7 +70,7 @@ export class IncidentFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private _formSrv: IncidentFormService,
-    private dialogRef: MatDialogRef<ReusableModalComponent>,
+    public dialogRef: MatDialogRef<ReusableModalComponent>,
     private _dialog: MatDialog
   ) {}
 
@@ -84,7 +85,10 @@ export class IncidentFormComponent implements OnInit {
     return this.incidentForm.controls;
   }
 
-  public configForm() {
+  /**
+   * @description config reactive onInit()
+   */
+  public configForm(): void {
     this.incidentForm = this.fb.group({
       datePickerTask: new FormControl(null, [Validators.required]),
       severitySelect: new FormControl(null, [Validators.required]),
@@ -96,6 +100,9 @@ export class IncidentFormComponent implements OnInit {
     });
   }
 
+  /**
+   * @description mock data for responsiblePerson field
+   */
   public getDataForAutocomplete(): void {
     this._formSrv.getPersonsToAutocomplete().subscribe(
       (response) => {
@@ -110,7 +117,10 @@ export class IncidentFormComponent implements OnInit {
     );
   }
 
-  public filterAutocomplete() {
+  /**
+   * @description function for autocomplete triggers
+   */
+  public filterAutocomplete(): void {
     this.getDataForAutocomplete();
     this.filteredOptions = this.incidentForm
       .get('responsiblePerson')
@@ -127,7 +137,10 @@ export class IncidentFormComponent implements OnInit {
     );
   }
 
-  public linkDependantSelects() {
+  /**
+   * @description dependant selects values
+   */
+  public linkDependantSelects(): void {
     const severityRange = this.incidentForm.get('severitySelect');
     severityRange.valueChanges.subscribe((sev) => {
       severityRange.clearValidators();
@@ -147,7 +160,10 @@ export class IncidentFormComponent implements OnInit {
     });
   }
 
-  public notificationValidator() {
+  /**
+   * @description custom Validator for notification field
+   */
+  public notificationValidator(): ValidatorFn {
     return (control: AbstractControl) => {
       let severityRange = null;
       if (this.incidentForm) {
@@ -161,7 +177,10 @@ export class IncidentFormComponent implements OnInit {
     };
   }
 
-  public sendForm() {
+  /**
+   * @description function for trigger register btn and close
+   */
+  public sendForm(): void {
     if (this.incidentForm.valid) {
       const isValidNotification = this.validateNotification();
       if (isValidNotification) {
@@ -173,14 +192,20 @@ export class IncidentFormComponent implements OnInit {
     }
   }
 
-  public showFormErrors() {
+  /**
+   * @description trigger not valid form
+   */
+  public showFormErrors(): void {
     Object.keys(this.incidentForm.controls).forEach((field) => {
       const control = this.incidentForm.get(field);
       control.markAsTouched({ onlySelf: true });
     });
   }
 
-  public validateNotification() {
+  /**
+   * @description validate notifcation field
+   */
+  public validateNotification(): boolean {
     let isValidForm = null;
     const severityRange = this.incidentForm.get('severitySelect');
     const notification = this.incidentForm.get('notification');
@@ -192,12 +217,18 @@ export class IncidentFormComponent implements OnInit {
     return isValidForm;
   }
 
-  public sendFormAndCloseModal() {
-      const formValues = this.incidentForm.value;
-      this.dialogRef.close({ formValues: formValues });
+  /**
+   * @description function triggers success inicident registered
+   */
+  public sendFormAndCloseModal(): void {
+    const formValues = this.incidentForm.value;
+    this.dialogRef.close({ formValues: formValues });
   }
 
-  public notificateSuccess() {
+  /**
+   * @description function triggers successNotification in modal
+   */
+  public notificateSuccess(): void {
     const timeout = 2000;
     const dialogRef = this._dialog.open(SuccessNotificationComponent, {
       width: '400px',
@@ -208,13 +239,15 @@ export class IncidentFormComponent implements OnInit {
         dialogRef.close();
       }, timeout);
     });
-
   }
-
-  cancelForm() {
+  /**
+   * @description close modal
+   */
+  cancelForm(): void {
     this.dialogRef.close();
   }
 
+  // ------------------------------------------------------------ CONFIG METHODS ----------------------------------------------- //
   public configActionButtons() {
     this.btnDeleteIncident = this.configButton(
       'Eliminar incidencia',

@@ -21,7 +21,10 @@ describe('IncidentFormComponent', () => {
   let nativeElement: HTMLElement;
   let httpTestingController: HttpTestingController;
   let service: IncidentFormService;
-
+  const mockDialogRef = {
+    close: jasmine.createSpy('close'),
+    open: jasmine.createSpy('open'),
+  };
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [IncidentFormComponent],
@@ -36,7 +39,7 @@ describe('IncidentFormComponent', () => {
       ],
       providers: [
         IncidentFormService,
-        { provide: MatDialogRef, useValue: {} },
+        { provide: MatDialogRef, useValue: { mockDialogRef } },
         { provide: MAT_DIALOG_DATA, useValue: {} },
       ],
     }).compileComponents();
@@ -45,9 +48,7 @@ describe('IncidentFormComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(IncidentFormComponent);
     component = fixture.componentInstance;
-    // inject by css
     debugCssElement = fixture.debugElement.query(By.css('form'));
-    // returns domReference
     nativeElement = debugCssElement.nativeElement;
     httpTestingController = TestBed.inject(HttpTestingController);
     service = TestBed.inject(IncidentFormService);
@@ -90,6 +91,31 @@ describe('IncidentFormComponent', () => {
     expect(datePickerOpening.valid).toBeFalsy();
     datePickerOpening.setValue('');
     expect(datePickerOpening.hasError('required')).toBeTruthy();
+  });
+
+  xit('should close modal when cancel btn', () => {
+    // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/36661
+    const spy = spyOn(component.dialogRef, 'close').and.callThrough();
+    component.cancelForm();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  xit('should close modal when register btn', () => {
+    // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/36661
+    const spy = spyOn(component.dialogRef, 'close').and.callThrough();
+    component.sendFormAndCloseModal();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should verify dropdowns changes values', async () => {
+    const severitySelect = fixture.debugElement.query(
+      By.css('.mat-select-trigger')
+    );
+    severitySelect.nativeElement.value = 'foo';
+    severitySelect.nativeElement.dispatchEvent(new Event('change'));
+    fixture.whenStable().then(() => {
+      expect(severitySelect.nativeElement.value).toBe('foo');
+    });
   });
 
   it('should return data to autocomplete component', () => {

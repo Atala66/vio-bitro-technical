@@ -21,8 +21,8 @@ export class HomeViewComponent implements OnInit {
     this._materialModule.openModal(
       {
         class: 'modalLg',
-        title: 'Crear incidencia',
-        formContent: '',
+		title: 'Crear incidencia',
+		formContent: ''
       },
       IncidentFormComponent
     );

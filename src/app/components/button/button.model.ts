@@ -1,4 +1,4 @@
-export interface IButtonModel {
+export class IButtonModel {
   text: string;
   style?: string;
 }

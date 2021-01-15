@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ButtonComponent } from './button.component';
+import { IButtonModel } from './button.model';
 
 describe('ButtonComponent', () => {
   let component: ButtonComponent;
@@ -8,19 +8,22 @@ describe('ButtonComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ButtonComponent ]
-    })
-    .compileComponents();
+      declarations: [ButtonComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ButtonComponent);
+    // instancia
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    component.config =  new IButtonModel();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should recive @Input of model button', () => {
+    expect(component.config instanceof IButtonModel).toBeTruthy();
+  });
 });

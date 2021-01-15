@@ -96,7 +96,7 @@
       <!--  END: CIERRE DATOS APERTURA  -->
 
       <!--  INIT: PERSONA -->
-      <mat-form-field class="form-field" floatLabel="never">
+      <mat-form-field class="form-field responsible-person" floatLabel="never">
         <label class="label">{{ FORM_LABELS.RESPONSIBLE_PERSON | uppercase }}</label>
         <input
           type="text"
@@ -120,7 +120,7 @@
     <div class="block-three">
 	<label class="label">{{ FORM_LABELS.NOTES | uppercase }}</label>
       <!--  INIT: Editor  -->
-      <editor class="mce-notification"
+      <editor  class="mce-notification"
         formControlName="textArea"
         [init]="{
           icons: 'material',

@@ -27,7 +27,7 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatMomentDateModule,
+	MatMomentDateModule
   ],
   exports: [
     MatButtonModule,
@@ -42,7 +42,7 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatMomentDateModule,
+	MatMomentDateModule
   ],
 })
 export class MaterialModule {
@@ -76,11 +76,10 @@ export class MaterialModule {
     }
     data.class = data.class.split(' ');
     data.component = content;
-    const dialogRef = this.dialog.open(ReusableModalComponent, {
-	  // tslint:disable-next-line:object-literal-shorthand
+    this.dialog.open(ReusableModalComponent, {
+      // tslint:disable-next-line:object-literal-shorthand
       data: data,
       panelClass: data.class ? data.class : '',
     });
-
   }
 }
